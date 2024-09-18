@@ -55,7 +55,14 @@ const PerlinGet = (xInput, yInput) => {
     bottomLinearInterpolation
   );
 
-  return vertices;
+  //return (Math.log(vertices + 2) / 1.5).toFixed(2);
+  return Math.log(vertices).toFixed(2);
+};
+
+var randomInt = function (max, min) {
+  let minV = Math.ceil(min);
+  let maxV = Math.floor(max);
+  return Math.floor(Math.random() * (maxV - minV + 1)) + minV;
 };
 
 let gradients = {};
@@ -71,18 +78,43 @@ for (let rowIndex = 0; rowIndex < nodes; rowIndex++) {
   }
   grid.push(row);
 }
-grid.forEach((row) => {
-  let rowString = "";
-  row.forEach((coord) => {
-    rowString += " " + PerlinGet(coord.x, coord.y) + " ";
+window.onload = () => {
+  const myCanvas = document.getElementById("cnvs");
+  myCanvas.width = nodes * 10;
+  myCanvas.height = nodes * 10;
+  const context = myCanvas.getContext("2d");
+
+  grid.forEach((row, index) => {
+    let rowString = "";
+
+    context.fillStyle = `rgb(${randomInt(255, 0)} ${randomInt(
+      255,
+      0
+    )} ${randomInt(255, 0)})`;
+    context.fillRect(index * 10, index * 10, nodes, nodes);
+    /*
+    let pixelData = context.getImageData(0, 0, myCanvas.width, myCanvas.height);
+    let pixel = pixelData.data;
+
+    pixel[0] = randomInt(255, 0);
+    pixel[1] = randomInt(255, 0);
+    pixel[2] = randomInt(255, 0);
+    pixel[3] = randomInt(255, 0);
+
+    context.putImageData(pixelData, 0, 0);
+    */
+
+    row.forEach((coord) => {
+      rowString += " | " + PerlinGet(coord.x, coord.y);
+    });
+    const newDiv = document.createElement("div");
+
+    let data = document.createTextNode(rowString);
+    newDiv.appendChild(data);
+    const testDiv = document.getElementById("THETESTID");
+    console.log(document);
+    if (testDiv) {
+      document.body.insertBefore(newDiv, testDiv);
+    }
   });
-  let newDiv = document.createElement("div");
-
-  newDiv.appendChild(rowString);
-
-  const testDiv = document.getElementById("test");
-  document.body.insertBefore(newDiv, testDiv);
-  console.log(rowString);
-});
-
-alert("hello");
+};
