@@ -56,7 +56,7 @@ const PerlinGet = (xInput, yInput) => {
   );
 
   //return (Math.log(vertices + 2) / 1.5).toFixed(2);
-  return Math.log(vertices).toFixed(2);
+  return ((vertices +2)/4).toFixed(3);
 };
 
 var randomInt = function (max, min) {
@@ -65,11 +65,19 @@ var randomInt = function (max, min) {
   return Math.floor(Math.random() * (maxV - minV + 1)) + minV;
 };
 
+const colorPixel = (xCord, yCord, vertices, size, context) => {
+      context.fillStyle = `rgb(
+      ${255 * vertices}
+      ${255 * vertices}
+      ${255 * vertices})`;
+      context.fillRect(xCord*10, yCord*10, size, size);
+}
+
 let gradients = {};
 let memory = {};
 
 let grid = [];
-const nodes = 10;
+const nodes = 100;
 
 for (let rowIndex = 0; rowIndex < nodes; rowIndex++) {
   const row = [];
@@ -84,14 +92,9 @@ window.onload = () => {
   myCanvas.height = nodes * 10;
   const context = myCanvas.getContext("2d");
 
-  grid.forEach((row, index) => {
+  grid.forEach((row, xIndex) => {
     let rowString = "";
 
-    context.fillStyle = `rgb(${randomInt(255, 0)} ${randomInt(
-      255,
-      0
-    )} ${randomInt(255, 0)})`;
-    context.fillRect(index * 10, index * 10, nodes, nodes);
     /*
     let pixelData = context.getImageData(0, 0, myCanvas.width, myCanvas.height);
     let pixel = pixelData.data;
@@ -104,8 +107,10 @@ window.onload = () => {
     context.putImageData(pixelData, 0, 0);
     */
 
-    row.forEach((coord) => {
-      rowString += " | " + PerlinGet(coord.x, coord.y);
+    row.forEach((coord, yIndex) => {
+      const vertices = PerlinGet(coord.x, coord.y);
+      rowString += " | " + vertices;
+      colorPixel(xIndex, yIndex,vertices, nodes, context)
     });
     const newDiv = document.createElement("div");
 
