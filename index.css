@@ -1,0 +1,18 @@
+.container {
+
+  display: flex;
+  flex:right
+
+}
+
+
+
+.box {
+
+  /* Optional styling for the divs, like border, padding etc. */
+
+  border: 1px solid black;
+
+  padding: 10px;
+
+}

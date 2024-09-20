@@ -32,7 +32,7 @@ const cubic = (x) => {
 };
 
 const LinearInterpolation = (x, a, b) => {
-  return a + cubic(x) * (b - a);
+  return a + SmoothStep(x) * (b - a);
 };
 
 const PerlinGet = (xInput, yInput) => {
@@ -109,20 +109,33 @@ window.onload = () => {
   myCanvas.height = 512;
   const ctx = myCanvas.getContext("2d");
 
-  const GRID_SIZE = 16;
-  const RESOLUTION = 128;
-  const COLOR_SCALE = 180;
+  const myCanvas2 = document.getElementById("cnvsBW");
+  myCanvas2.width = 512;
+  myCanvas2.height = 512;
+  const ctx2 = myCanvas2.getContext("2d");
+
+  const GRID_SIZE = 4 * 1;
+  const RESOLUTION = 128 / 1;
+  const COLOR_SCALE = 255;
 
   let pixel_size = myCanvas.width / RESOLUTION;
   let num_pixels = GRID_SIZE / RESOLUTION;
 
+      const range = new Set([])
   for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
     for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
-      let v = parseInt(PerlinGet(x, y) * COLOR_SCALE);
+      let purev = (PerlinGet(x, y) )
+      let v = parseInt(purev * COLOR_SCALE);
       ctx.fillStyle = "hsl(" + v + ",50%,50%)";
-      //ctx.fillStyle = `rgb(${v} ${v} ${v})`;
-      //ctx.fillStyle = rgbToHsl(v, v, v);
+      ctx2.fillStyle = `rgb(${v} ${v} ${v})`;
+      range.add(purev)
       ctx.fillRect(
+        (x / GRID_SIZE) * myCanvas.width,
+        (y / GRID_SIZE) * myCanvas.width,
+        pixel_size,
+        pixel_size
+      );
+      ctx2.fillRect(
         (x / GRID_SIZE) * myCanvas.width,
         (y / GRID_SIZE) * myCanvas.width,
         pixel_size,
@@ -131,25 +144,12 @@ window.onload = () => {
     }
   }
 
-  /*
-  grid.forEach((row, xIndex) => {
-    let rowString = "";
-
-    row.forEach((coord, yIndex) => {
-      const vertices = PerlinGet(coord.x, coord.y);
-      rowString += " | " + vertices;
-      colorPixel(xIndex, yIndex, vertices, 1, context);
-    });
-    const newDiv = document.createElement("div");
-
-    let data = document.createTextNode(rowString);
-    newDiv.appendChild(data);
-    const testDiv = document.getElementById("THETESTID");
-    console.log(document);
-    if (testDiv) {
-      document.body.insertBefore(newDiv, testDiv);
-    }
-    console.log(gradients);
-  });
-  */
+  const rangeArray = [...range]
+  const max = rangeArray.reduce((max, v) => max >= v ? max : v, -Infinity)
+  const min = rangeArray.reduce((min, v) => min <= v ? min : v, Infinity)
+  const sum = rangeArray.reduce((a,b) => a + b, 0)
+  const avg = (sum/rangeArray.length)
+  console.log("max is "+ max)
+  console.log("min is " + min)
+  console.log("aveage is " + avg)
 };
