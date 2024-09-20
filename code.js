@@ -114,21 +114,21 @@ window.onload = () => {
   myCanvas2.height = 512;
   const ctx2 = myCanvas2.getContext("2d");
 
-  const GRID_SIZE = 4 * 1;
-  const RESOLUTION = 128 / 1;
+  const GRID_SIZE = 4 * 9000;
+  const RESOLUTION = 128 / 9000;
   const COLOR_SCALE = 255;
 
   let pixel_size = myCanvas.width / RESOLUTION;
   let num_pixels = GRID_SIZE / RESOLUTION;
 
-      const range = new Set([])
+  const range = new Set([]);
   for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
     for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
-      let purev = (PerlinGet(x, y) )
+      let purev = PerlinGet(x, y);
       let v = parseInt(purev * COLOR_SCALE);
       ctx.fillStyle = "hsl(" + v + ",50%,50%)";
       ctx2.fillStyle = `rgb(${v} ${v} ${v})`;
-      range.add(purev)
+      range.add(purev);
       ctx.fillRect(
         (x / GRID_SIZE) * myCanvas.width,
         (y / GRID_SIZE) * myCanvas.width,
@@ -144,12 +144,12 @@ window.onload = () => {
     }
   }
 
-  const rangeArray = [...range]
-  const max = rangeArray.reduce((max, v) => max >= v ? max : v, -Infinity)
-  const min = rangeArray.reduce((min, v) => min <= v ? min : v, Infinity)
-  const sum = rangeArray.reduce((a,b) => a + b, 0)
-  const avg = (sum/rangeArray.length)
-  console.log("max is "+ max)
-  console.log("min is " + min)
-  console.log("aveage is " + avg)
+  const rangeArray = [...range];
+  const max = rangeArray.reduce((max, v) => (max >= v ? max : v), -Infinity);
+  const min = rangeArray.reduce((min, v) => (min <= v ? min : v), Infinity);
+  const sum = rangeArray.reduce((a, b) => a + b, 0);
+  const avg = sum / rangeArray.length;
+  console.log("max is " + max);
+  console.log("min is " + min);
+  console.log("aveage is " + avg);
 };
